@@ -15,5 +15,5 @@ categories=["filesystem", "parsing"]
 
 [dependencies]
 walkdir = "2"
-regex = "1.3"
+regex = "1"
 fxhash = "0.2"
