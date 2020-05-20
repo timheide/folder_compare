@@ -12,7 +12,7 @@ Licensed under Apache-2.0
 
 ### Usage
 
-To use this crate, add `walkdir` as a dependency to your project's
+Add `folder_compare` as a dependency to your project's
 `Cargo.toml`:
 
 ```toml
