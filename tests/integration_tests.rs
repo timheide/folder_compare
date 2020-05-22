@@ -7,7 +7,7 @@ use std::io::Error;
 #[test]
 fn one_changed_one_new_one_ignored() {
     let dirs = prepare_environment().unwrap();
-    let excluded = vec![".doc", ".txt"];
+    let excluded = vec![".doc".to_string(), ".txt".to_string()];
     let (a, b) = folder_compare::compare(dirs.0.as_path(), dirs.1.as_path(), &excluded).unwrap();
 
     remove_dir_all(dirs.1.parent().unwrap()).unwrap();

@@ -30,11 +30,11 @@ use std::io::{Read};
 /// use folder_compare;
 ///
 ///
-/// let excluded = vec![".doc", ".txt"];
+/// let excluded = vec![".doc".to_string(), ".txt".to_string()];
 /// let (changed_files, new_files) = folder_compare::compare(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded).unwrap();
 ///```
 ///
-pub fn compare(path1: &Path, path2: &Path, excluded: &Vec<&str>) -> Result<(Vec<PathBuf>, Vec<PathBuf>), Error> {
+pub fn compare(path1: &Path, path2: &Path, excluded: &Vec<String>) -> Result<(Vec<PathBuf>, Vec<PathBuf>), Error> {
     let mut changed_files: Vec<PathBuf> = Vec::new();
     let mut new_files: Vec<PathBuf> = Vec::new();
     let mut walker = WalkDir::new(path1).into_iter();
