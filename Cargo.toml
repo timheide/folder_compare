@@ -1,6 +1,6 @@
 [package]
 name = "folder_compare"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Tim Serowski <info@timserowski.de>"]
 edition = "2018"
 description="Compare two folders and get a list of changed and new files"
@@ -10,8 +10,6 @@ homepage="https://github.com/tserowski/folder_compare"
 license="Apache-2.0"
 keywords=["diff", "directory"]
 categories=["filesystem", "parsing"]
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 walkdir = "2"

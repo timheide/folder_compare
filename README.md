@@ -17,7 +17,7 @@ Add `folder_compare` as a dependency to your project's
 
 ```toml
 [dependencies]
-folder_compare = "0.1"
+folder_compare = "0.3"
 ```
 
  # Example
@@ -29,5 +29,8 @@ use std::path::Path;
 use folder_compare;
 
 let excluded = vec![".doc".to_string(), ".txt".to_string()];
-let (changed_files, new_files) = folder_compare::compare(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded).unwrap();
+let result = FolderCompare::new(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded).unwrap();
+
+let changed_files = result.changed_files;
+let new_filed = result.new_files;
 ```

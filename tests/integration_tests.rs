@@ -3,15 +3,16 @@ use std::path::PathBuf;
 use std::{env, fs};
 use std::fs::{create_dir, remove_dir_all};
 use std::io::Error;
+use folder_compare::FolderCompare;
 
 #[test]
 fn one_changed_one_new_one_ignored() {
     let dirs = prepare_environment().unwrap();
     let excluded = vec![".doc".to_string(), ".txt".to_string()];
-    let (a, b) = folder_compare::compare(dirs.0.as_path(), dirs.1.as_path(), &excluded).unwrap();
+    let result = FolderCompare::new(dirs.0.as_path(), dirs.1.as_path(), &excluded).unwrap();
 
     remove_dir_all(dirs.1.parent().unwrap()).unwrap();
-    assert_eq!((a.len(), b.len()), (1, 1));
+    assert_eq!((result.changed_files.len(), result.new_files.len()), (1, 1));
 }
 
 fn prepare_environment() -> Result<(PathBuf, PathBuf), Error> {
