@@ -20,6 +20,7 @@ use std::io::Read;
 pub struct FolderCompare {
     pub changed_files: Vec<PathBuf>,
     pub new_files: Vec<PathBuf>,
+    pub unchanged_files: Vec<PathBuf>,
 }
 
 impl FolderCompare {
@@ -43,14 +44,16 @@ impl FolderCompare {
     /// let result = FolderCompare::new(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded).unwrap();
     ///
     /// let changed_files = result.changed_files;
-    /// let new_filed = result.new_files;
+    /// let new_files = result.new_files;
+    /// let unchanged_files = result.unchanged_files;
     ///```
     ///
     pub fn new(path1: &Path, path2: &Path, excluded: &Vec<String>) -> Result<Self, Error> {
 
         let mut final_object = FolderCompare {
             changed_files: vec![],
-            new_files: vec![]
+            new_files: vec![],
+            unchanged_files: vec![]
         };
 
         let mut walker = WalkDir::new(path1).into_iter();
@@ -93,9 +96,10 @@ impl FolderCompare {
             hasher2.write(buffer2);
 
             if hasher.finish() == hasher2.finish() {
-                continue;
+                final_object.unchanged_files.push(entry.into_path());
+            } else {
+                final_object.changed_files.push(entry.into_path());
             }
-            final_object.changed_files.push(entry.into_path());
         }
 
 
