@@ -17,7 +17,7 @@ Add `folder_compare` as a dependency to your project's
 
 ```toml
 [dependencies]
-folder_compare = "0.3"
+folder_compare = "0.4"
 ```
 
  # Example
