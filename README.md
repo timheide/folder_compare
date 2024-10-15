@@ -8,6 +8,8 @@ Overall the functionality is comparable to a `diff -rq folder1 folder2 -X exclud
 
 For recognizing changed files, hashing with `FxHasher` is used.
 
+If you only want to check for new files in the first given directory and skip checking for changed files (using `FxHasher`) please submit true to the last parameter `skip_hashing`
+
 Licensed under Apache-2.0
 
 ### Usage
@@ -29,7 +31,7 @@ use std::path::Path;
 use folder_compare;
 
 let excluded = vec![".doc".to_string(), ".txt".to_string()];
-let result = FolderCompare::new(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded).unwrap();
+let result = FolderCompare::new(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded, false).unwrap();
 
 let changed_files = result.changed_files;
 let new_filed = result.new_files;
