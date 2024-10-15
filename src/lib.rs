@@ -28,10 +28,15 @@ impl FolderCompare {
     /// two lists of `PathBuf` containing changed and new (only existing in first Directory) files.
     /// It takes a `Vec<&str>` as argument for excluding specific substrings in the path (e.g. file extensions like .txt).
     ///
+    /// If you only want to check for new files in the first given directory and skip checking for changed files (using `FxHasher`)
+    /// please submit true to the last parameter `skip_hashing`
+    ///
     ///
     /// # Example
     ///
     /// The following code recursively iterates over two directories and returns lists of changed and new files
+    ///
+    ///
     ///
     ///```
     /// use std::path::Path;
@@ -41,14 +46,14 @@ impl FolderCompare {
     ///
     /// let excluded = vec![".doc".to_string(), ".txt".to_string()];
     ///
-    /// let result = FolderCompare::new(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded).unwrap();
+    /// let result = FolderCompare::new(Path::new("/tmp/a"), Path::new("/tmp/b"), &excluded, false).unwrap();
     ///
     /// let changed_files = result.changed_files;
     /// let new_files = result.new_files;
     /// let unchanged_files = result.unchanged_files;
     ///```
     ///
-    pub fn new(path1: &Path, path2: &Path, excluded: &Vec<String>) -> Result<Self, Error> {
+    pub fn new(path1: &Path, path2: &Path, excluded: &Vec<String>, skip_hashing: bool) -> Result<Self, Error> {
 
         let mut final_object = FolderCompare {
             changed_files: vec![],
@@ -85,20 +90,21 @@ impl FolderCompare {
             }
 
             let second_file = file_in_second_path.to_path_buf().clone();
+            if !skip_hashing {
+                let buffer = &mut vec![];
+                File::open(entry.path())?.read_to_end(buffer)?;
+                let mut hasher = FxHasher::default();
+                hasher.write(buffer);
+                let buffer2 = &mut vec![];
+                File::open(second_file)?.read_to_end(buffer2)?;
+                let mut hasher2 = FxHasher::default();
+                hasher2.write(buffer2);
 
-            let buffer = &mut vec![];
-            File::open(entry.path())?.read_to_end(buffer)?;
-            let mut hasher = FxHasher::default();
-            hasher.write(buffer);
-            let buffer2 = &mut vec![];
-            File::open(second_file)?.read_to_end(buffer2)?;
-            let mut hasher2 = FxHasher::default();
-            hasher2.write(buffer2);
-
-            if hasher.finish() == hasher2.finish() {
-                final_object.unchanged_files.push(entry.into_path());
-            } else {
-                final_object.changed_files.push(entry.into_path());
+                if hasher.finish() == hasher2.finish() {
+                    final_object.unchanged_files.push(entry.into_path());
+                } else {
+                    final_object.changed_files.push(entry.into_path());
+                }
             }
         }
 
